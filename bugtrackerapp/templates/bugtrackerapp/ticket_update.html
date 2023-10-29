@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+  <h1>Update Ticket</h1>
+  <form action="" method="POST" enctype='multipart/form-data'>
+    {% csrf_token %}
+    {{ticket_form.as_p}}
+    <button type='submit' class="btn btn-secondary">Update</button>
+  </form>
+{% endblock content %}
+  

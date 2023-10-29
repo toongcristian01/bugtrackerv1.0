@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+<h1>Ticket Detail</h1>
+<hr>
+<div class="d-flex flex-row flex-wrap justify-content-between">
+  <div class="info">
+    <p>Title: {{ticket.title}}</p>
+    <p>Description: {{ticket.ticket_description}}</p>
+    <p>Project: {{ticket.project}}</p>
+    <p>Author: {{ticket.author}}</p>
+    <p>Assigned Members:</p>
+    {% for devs in ticket.assign_members.all %}
+    <p>{{devs}}</p>
+    {% endfor %}
+  </div>
+  <div class="info2">
+    <p>Type: {{ticket.type}}</p>
+    <p>Priority: {{ticket.priority}}</p>
+    <p>Status: {{ticket.status}}</p>
+  </div>
+</div>
+<hr>
+<div class="d-flex flex-row flex-wrap justify-content-between">
+  <div>
+    {% if ticket.image %}
+    <p>Image:</p>
+    <div class="ticket-image">
+      <img src=" {{ticket.image.url}}" alt="">
+    </div>
+    {% endif %}
+    <br><br>
+    {% if is_user_ticket or is_developer_ticket or request.user.profile.role.role == "Admin" %}
+    <a href="{% url 'bugtracker:ticket_update' ticket.id %}" class="btn btn-warning">Update</a>
+    <a href="{% url 'bugtracker:ticket_delete' ticket.id %}" class="btn btn-danger">Delete</a>
+    {% endif %}
+  </div>
+  <div>
+    <div class="card">
+      <div class="card-body">
+        <h4>Add Comment</h4>
+        <form method="POST">
+          {% csrf_token %}
+          {{comment_form}}
+          <br>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h4>Comments</h4>
+        {% for comment in comments %}
+        <div class="card mb-3">
+          <div class="card-body">
+            <h6>{{comment.name}} - {{comment.date}}</h6>
+            <h5>{{comment.body}}</h5>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+{% endblock content %}

@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+<h1>Tickets ({{tickets_count}})</h1>
+<div class="draft-table">
+  <table class="table" id="dataTable">
+    <thead>
+      <tr>
+        <th scope="col">Title</th>
+        <th scope="col">Description</th>
+        <th scope="col">status</th>
+        <th scope="col">Author</th>
+        <th scope="col">Created Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ticket in tickets %}
+      <tr>
+        <td>
+          <a href="{% url 'bugtracker:ticket_detail' ticket.id %}">{{ticket.title}}</a>
+        </td>
+        <td>
+          {{ticket.ticket_description|truncatewords:20}}
+        </td>
+        <td>
+          {{ticket.status}}
+        </td>
+        <td>{{ticket.author}} - {{ticket.author.role.role}}</td>
+        <td>{{ticket.created|date:"M, d, Y"}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<br><br><br>
+<hr>
+<h1>Resolved Tickets ({{resolved_tickets_count}})</h1>
+<div class="draft-table">
+  <table class="table" id="dataTable">
+    <thead>
+      <tr>
+        <th scope="col">Title</th>
+        <th scope="col">Description</th>
+        <th scope="col">status</th>
+        <th scope="col">Author</th>
+        <th scope="col">Created Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ticket in resolved_tickets %}
+      <tr>
+        <td>
+          <a href="{% url 'bugtracker:ticket_detail' ticket.id %}">{{ticket.title}}</a>
+        </td>
+        <td>
+          {{ticket.ticket_description}}
+        </td>
+        <td>
+          {{ticket.status}}
+        </td>
+        <td>{{ticket.author}} - {{ticket.author.role.role}}</td>
+        <td>{{ticket.created|date:"M, d, Y"}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+
+
+{% endblock content %}

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+<h1>Tickets</h1>
+<div class="draft-table">
+  <table class="table" id="dataTable">
+    <thead>
+      <tr>
+        <th scope=" col">Title</th>
+        <th scope="col">Description</th>
+        <th scope="col">Status</th>
+        <th scope="col">Created Date</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ticket in tickets %}
+      <tr>
+        <td>
+          <a href="{% url 'bugtracker:project_detail' ticket.project.id %}">{{ticket.title}}</a>
+        </td>
+        <td>
+          {{ticket.ticket_description}}
+        </td>
+        <td>{{ticket.status}}</td>
+        <td>{{ticket.created|date:"M, d, Y"}}</td>
+        <td>
+          <a href="{% url 'bugtracker:ticket_detail' ticket.id %}">Update</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+
+{% endblock content %}

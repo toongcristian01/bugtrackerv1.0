@@ -1,0 +1,15 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<h1>Register</h1>
+<form action="{% url 'accounts:register_view' %}" method="POST">
+  {% csrf_token %}
+{{form.as_p}}
+
+  <br />
+  <!-- <select name="" id="">
+    <option value="{{role.tester_key}}">{{role.tester_value}}</option>
+    <option value="{{role.developer_key}}">{{role.developer_value}}</option>
+  </select> -->
+  <br /><br /><br />
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock content %}

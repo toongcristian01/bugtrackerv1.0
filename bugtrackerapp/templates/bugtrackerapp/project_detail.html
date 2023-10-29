@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+<h1>Project Detail</h1>
+<hr>
+<div class="d-flex flex-row justify-content-between">
+  <div>
+    <p>Name: {{project.name}}</p>
+    <p>Description: {{project.description}}</p>
+    <p>Submission Date: {{project.submission_date}}</p>
+
+    Project Name: {{project}}
+  </div>
+  <div>
+    <h5>Assigned Members:</h5>
+    {% for member in project.assigned_members.all %}
+    <p>{{member}}</p>
+    {% endfor %}
+  </div>
+</div>
+
+
+<br>
+<hr>
+<h3>Tickets ({{tickets_by_project_count}})</h3>
+<div class="draft-table">
+  <table class="table" id="dataTable">
+    <thead>
+      <tr>
+        <th scope="col">Title</th>
+        <th scope="col">Description</th>
+        <th scope="col">Status</th>
+        <th scope="col">Author</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ticket in tickets_by_project %}
+      <tr>
+        <td>
+          <a href="{% url 'bugtracker:ticket_detail' ticket.id %}">{{ticket}}</a>
+        </td>
+        <td>
+          {{ticket.ticket_description}}
+        </td>
+        <td>
+          {{ticket.status}}
+        </td>
+        <td>
+          {{ticket.author}}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock content %}

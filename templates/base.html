@@ -1,0 +1,293 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Favicons -->
+  <link href="{% static 'imgs/favicon.png' %}" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <title>Bug Tracker</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500&family=Markazi+Text:wght@400;500;600;700&family=Montserrat:ital,wght@1,100&family=Nunito:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;1,400;1,500;1,600;1,700&family=Quicksand:wght@300;400;500;600;700&family=Roboto:wght@100&family=Yeseva+One&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+  <script defer src="https://code.jquery.com/jquery-3.7.0.js"></script>
+  <script defer src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script defer src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+
+  <style>
+    :root {
+      --main-bg-color: #012970;
+      --main-text-color: #012970;
+      --second-text-color: #bbbec5;
+      --second-bg-color: #c1efde;
+    }
+
+    /* .try-text {
+      color: #fff;
+    } */
+
+    /* .login-container {
+      background: url("https://images.pexels.com/photos/1647972/pexels-photo-1647972.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1") no-repeat center center fixed;
+      background-image: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+      padding: 2rem;
+    } */
+    /* background-image: linear-gradient(to top, #d9afd9 0%, #97d9e1 100%); */
+
+    #page-content-wrapper {
+      background-image: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%);
+      background-image: linear-gradient(to top, #dad4ec 0%, #dad4ec 1%, #f3e7e9 100%);
+      background-image: linear-gradient(to top, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%);
+
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+      padding: 2rem;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+
+    }
+
+
+    .navbar-top {
+      z-index: -9999 !important;
+
+    }
+
+    .try-text {
+      background: #fff;
+      width: 300px;
+      border-radius: 5px;
+      padding: 10px 8px;
+      text-align: center;
+    }
+
+    a {
+      color: ##5C7BD9;
+      text-decoration: none;
+    }
+
+    .primary-text {
+      color: var(--main-text-color);
+    }
+
+    .second-text {
+      color: var(--second-text-color);
+    }
+
+    .primary-bg {
+      background-color: var(--main-bg-color);
+    }
+
+    .secondary-bg {
+      background-color: var(--second-bg-color);
+    }
+
+    .rounded-full {
+      border-radius: 100%;
+    }
+
+    #wrapper {
+      overflow-x: hidden;
+      background: #F5F8FE;
+    }
+
+    #sidebar-wrapper {
+      min-height: 100vh;
+      margin-left: -15rem;
+      -webkit-transition: margin 0.25s ease-out;
+      -moz-transition: margin 0.25s ease-out;
+      -o-transition: margin 0.25s ease-out;
+      transition: margin 0.25s ease-out;
+    }
+
+    #sidebar-wrapper .sidebar-heading {
+      padding: 0.875rem 1.25rem;
+      font-size: 1.2rem;
+    }
+
+
+    #page-content-wrapper {
+      min-width: 100vw;
+      padding: 7rem 5rem;
+    }
+
+    #wrapper.toggled #sidebar-wrapper {
+      margin-left: 0;
+    }
+
+    #menu-toggle {
+      cursor: pointer;
+    }
+
+    /* #sidebar-wrapper .list-group {
+      width: 17rem;
+    } */
+
+
+    .main-navbar {
+      z-index: 999 !important;
+
+      width: 400px;
+    }
+
+
+    .list-group-item {
+      border: none;
+      padding: 20px 30px;
+      width: 100%;
+    }
+
+    .list-group-item.active {
+      color: var(--main-text-color);
+      font-weight: bold;
+      border: none;
+    }
+
+    @media (min-width: 768px) {
+      #sidebar-wrapper {
+        margin-left: 0;
+      }
+
+      #page-content-wrapper {
+        min-width: 0;
+        width: 100%;
+      }
+
+      #wrapper.toggled #sidebar-wrapper {
+        margin-left: -15rem;
+      }
+    }
+
+    .ticket-image {
+      width: 700px;
+
+    }
+
+    .ticket-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    #dataTable {
+      font-family: Arial, Helvetica, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    #dataTable th {
+      background-color: #595957 !important;
+    }
+
+    #dataTable td,
+    #draft-table th {
+      padding: 1rem 3rem;
+    }
+
+    #dataTable tr:nth-child(even) {
+      background-color: #fafafa;
+    }
+
+
+
+    #dataTable th {
+      padding-top: 12px;
+      padding-bottom: 12px;
+      text-align: left;
+      background-color: #ccc;
+      color: white;
+    }
+
+    .navbar-top {
+      display: flex;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+
+<body>
+
+  {% include 'includes/navbartop.html' %}
+  {% include 'includes/navbar.html' %}
+  <div id="page-content-wrapper">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      {{message}}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% block content %}
+    {% endblock content %}
+  </div>
+
+  <!-- bootstrap -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+  <!-- JQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <!-- Data table JS -->
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+  <script>
+    // var el = document.getElementById("wrapper");
+    // var toggleButton = document.getElementById("menu-toggle");
+
+    // toggleButton.onclick = function () {
+    //   el.classList.toggle("toggled");
+    // };
+    //new DataTable('#dataTable');
+
+    $("#dataTable").DataTable({
+      //Datatables configurations
+      paging: true, // Pagination
+      pageLength: 10, // Data per page
+      lengthChange: true, // show entries per page
+      autoWidth: true, // control the auto width on columns
+      searching: true, // Input search
+      bInfo: true, // Info on footer
+      bSort: true, // Filter A to Z and Z to A (and numbers)
+      // disable columns with specific filter A to Z, Z to A
+      // "columnDefs": [{
+      //   "targets": 5, //  1 column
+      //   "targets": [4, 5], // More than 1 column
+      //   "orderable": false,
+      // }]
+    });
+    // enable Searchbox outside
+    var newSearch = $("#dataTable").DataTable();
+    $("#search").keyup(function () {
+      newSearch.search($(this).val()).draw();
+    })
+  </script>
+
+</body>
+
+</html>

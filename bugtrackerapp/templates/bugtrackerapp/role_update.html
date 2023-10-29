@@ -1,0 +1,21 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block content %}
+<h1>Manage User Roles</h1>
+<hr>
+Change Role for {{roleassignment.first_name}}
+<br><br>
+<form action="" method="POST">
+  {% csrf_token %}
+
+    {{roleupdate_form.as_p}}
+
+  <br />
+  <br /><br /><br />
+  <button type="submit" class="btn btn-primary">Assign</button>
+</form>
+ 
+
+
+
+{% endblock content %}

@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+<h1>Projects</h1>
+<hr>
+<div class="draft-table">
+  <table class="table" id="dataTable">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Submission Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for project in projects %}
+      <tr>
+        <td>
+          <a href="{% url 'bugtracker:project_detail' project.id %}">{{project}}</a>
+        </td>
+        <td>
+          {{project.submission_date}}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+
+
+
+{% endblock content %}

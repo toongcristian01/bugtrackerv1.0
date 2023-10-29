@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+  <h1>Admin dashboard</h1>
+  <hr>
+  <h3>Projects</h3>
+  {% for project in projects %}
+    <a href="{% url 'bugtracker:project_detail' project.id %}">{{project}}</a>
+  {% endfor %}
+    
+{% endblock content %}
+  

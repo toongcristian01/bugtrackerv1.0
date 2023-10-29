@@ -1,0 +1,76 @@
+{% load static %}
+
+
+
+<div class="d-flex" id="wrapper">
+        <div class="bg-white main-navbar" id="sidebar-wrapper">
+                <div class="sidebar-heading text-center py-4 primary-text fs-4 fw-bold text-uppercase border-bottom"><i
+                                class="fas fa-user-secret me-2"></i>Bug Tracker V1</div>
+
+                <div class="list-group list-group-flush my-3">
+                        {% if user.is_authenticated %}
+                        <h6 class="list-group-item list-group-item-action bg-transparent second-text active">
+                                Logged in as <span
+                                        style="color: #2ECA6A;">{{request.user.profile.first_name|title}}</span>
+                                <br>
+                                <br>
+                                Role: <span style="color: #2ECA6A;">{{request.user.profile.role.role}}</span>
+                        </h6>
+                        <hr>
+                        <a href="{% url 'bugtracker:home' %}"
+                                class="list-group-item list-group-item-action bg-transparent second-text active"><i
+                                        class="fas fa-chart-line me-2"></i>Dashboard</a>
+
+                        {% if request.user.profile.role.role == "Admin" %}
+                        <a href="{% url 'bugtracker:manage_role_assignment' %}"
+                                class="list-group-item list-group-item-action bg-transparent second-text active"><i
+                                        class="fas fa-user-tag me-2"></i>Manage Role Assignment</a>
+                        {% endif %}
+                        <a href="{% url 'bugtracker:projects_view' %}"
+                                class="list-group-item list-group-item-action bg-transparent second-text fw-bold active"><i
+                                        class="fas fa-project-diagram me-2"></i>Projects</a>
+                        {% if request.user.profile.role.role == "Tester" %}
+                        <a href="{% url 'bugtracker:tickets_tester' %}"
+                                class="list-group-item list-group-item-action bg-transparent second-text fw-bold active"><i
+                                        class="fas fa-tasks me-2"></i>My Tickets (Tester)</a>
+                        {% endif %}
+                        {% if request.user.profile.role.role == "Developer" %}
+                        <a href="{% url 'bugtracker:tickets_tester' %}"
+                                class="list-group-item list-group-item-action bg-transparent second-text fw-bold active"><i
+                                        class="fas fa-tasks me-2"></i>My Tickets (Dev)</a>
+                        {% endif %}
+                        <a href="{% url 'bugtracker:tickets_view' %}"
+                                class="list-group-item list-group-item-action bg-transparent second-text fw-bold active"><i
+                                        class="fas fa-clipboard-list me-2"></i>Tickets</a>
+
+                        {% if request.user.profile.role.role == "Admin" %}
+                        <a href="{% url 'bugtracker:add_project' %}"
+                                class="list-group-item list-group-item-action bg-transparent second-text fw-bold active"><i
+                                        class="fab fa-wpforms me-2"></i>New Project</a>
+                        {% endif %}
+
+                        {% if request.user.profile.role.role == "Admin" or request.user.profile.role.role == "Tester"%}
+                        <a href="{% url 'bugtracker:add_ticket' %}"
+                                class="list-group-item list-group-item-action bg-transparent second-text fw-bold active"><i
+                                        class="fab fa-wpforms me-2"></i>New Ticket</a>
+                        {% endif %}
+
+
+                        {% endif %}
+                        {% if user.is_authenticated %}
+                        {% if request.user.profile.role.role == "Admin" %}
+                        <a href="{% url 'accounts:register_view' %}"
+                                class="list-group-item list-group-item-action bg-transparent fw-bold active"><i
+                                        class="fab fa-wpforms me-2"></i>Register User</a>
+                        {% endif %}
+
+                        <a href="{% url 'accounts:logout_view' %}"
+                                class="list-group-item list-group-item-action bg-transparent text-danger fw-bold active"><i
+                                        class="fas fa-power-off me-2"></i>Logout</a>
+                        {% comment %} {% else %}
+                        <a href="{% url 'accounts:login_view' %}"
+                                class="list-group-item list-group-item-action bg-transparent text-danger fw-bold active"><i
+                                        class="fas fa-sign-in-alt me-2"></i>Login</a> {% endcomment %}
+                        {% endif %}
+                </div>
+        </div>

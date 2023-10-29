@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+{% if not user.is_authenticated %}
+<div class="login-container">
+  <div class="col-sm-6 mb-3">
+    <div class="card">
+      <div class="card-body">
+        <h1>Login</h1>
+        <form action="" method="POST">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Username</label>
+            <input type="text" class="form-control" name="username" aria-describedby="emailHelp">
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Password</label>
+            <input type="password" class="form-control" name="password">
+          </div>
+          <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <br>
+
+  <br>
+  <!-- DEMO -->
+  <h1 class="try-text">Try the App</h1>
+  <br>
+  <div class="row">
+    <div class="col-sm-6 mb-3">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Admin Credentials</h5>
+          <p class="card-text">
+          <p>Username: admin</p>
+          <p>Password: test123456</p>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 mb-3">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Tester Credentials</h5>
+          <p class="card-text">
+          <p>Username: hayleytester</p>
+          <p>Password: test123456</p>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 mb-3">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Developer Credentials</h5>
+          <p class="card-text">
+          <p>Username: elondeveloper</p>
+          <p>Password: test123456</p>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% else %}
+<h1>Bug Tracker V1 - Developed by Cristian To-ong</h1>
+{% endif %}
+
+
+{% endblock content %}

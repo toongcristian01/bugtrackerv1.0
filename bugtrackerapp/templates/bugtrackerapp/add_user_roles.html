@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<h1>Manage User Roles</h1>
+<br>
+<br>
+<form action="" method="POST">
+  {% csrf_token %}
+  {{manage_role_form.as_p}}
+  <br>
+  <button type="submit" class="btn btn-primary">Assign</button>
+</form>
+<br>
+<hr>
+<br>
+<table class="table" id="dataTable">
+  <thead>
+    <tr>
+      <th scope="col">Employee</th>
+      <th scope="col">Role</th>
+      <th scope="col">Edit</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for employee in employees %}
+    <tr>
+      <td>
+        {{employee.user}}
+      </td>
+      <td>
+        {{employee.role}}
+      </td>
+      <td><a href="{% url 'bugtracker:role_update' employee.id %}">Change Role</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+
+{% endblock content %}

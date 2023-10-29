@@ -1,0 +1,229 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load table_tags %}
+
+{% block content %}
+
+{% if request.user.profile.role.role == "Admin" %}
+<h1>Admin dashboard</h1>
+<hr>
+<h3>Projects</h3>
+<hr>
+<div class="draft-table">
+  <table id="dataTable" class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Submission Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for project in projects %}
+      <tr>
+        <td>
+          <a href="{% url 'bugtracker:project_detail' project.id %}">{{project}}</a>
+        </td>
+        <td>
+          {{project.submission_date}}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<hr>
+<br>
+{% comment %} CHART {% endcomment %}
+<div class="d-flex flex-wrap flex-row justify-content-between">
+  <div class="card p-5">
+    <h5 class="card-header">Ticket By Types</h5>
+    <div class="card-body">
+      <canvas id="myChart" width="200" height="200"></canvas>
+    </div>
+  </div>
+  <div class="card p-5">
+    <h5 class="card-header">Ticket By Priority</h5>
+    <div class="card-body">
+      <canvas id="myChart1" width="200" height="200"></canvas>
+    </div>
+  </div>
+  <div class="card p-5">
+    <h5 class="card-header">Ticket By Status</h5>
+    <div class="card-body">
+      <canvas id="myChart2" width="200" height="200"></canvas>
+    </div>
+  </div>
+</div>
+
+
+
+
+{% comment %} --------------------------------------------------------------------------------------- {% endcomment %}
+{% elif request.user.profile.role.role == "Tester" %}
+<h1>Tester Dashboard</h1>
+<hr>
+<h3>Projects</h3>
+<hr>
+<div class="draft-table">
+  <table id="dataTable" class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Submission Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for project in projects %}
+      <tr>
+        <td>
+          <a href="{% url 'bugtracker:project_detail' project.id %}">{{project}}</a>
+        </td>
+        <td>
+          {{project.submission_date}}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<hr>
+<br>
+{% comment %} CHART {% endcomment %}
+<div class="d-flex flex-wrap flex-row justify-content-between">
+  <div class="card p-5">
+    <h5 class="card-header">Ticket By Types</h5>
+    <div class="card-body">
+      <canvas id="myChart" width="200" height="200"></canvas>
+    </div>
+  </div>
+  <div class="card p-5">
+    <h5 class="card-header">Ticket By Priority</h5>
+    <div class="card-body">
+      <canvas id="myChart1" width="200" height="200"></canvas>
+    </div>
+  </div>
+  <div class="card p-5">
+    <h5 class="card-header">Ticket By Status</h5>
+    <div class="card-body">
+      <canvas id="myChart2" width="200" height="200"></canvas>
+    </div>
+  </div>
+</div>
+
+{% comment %} --------------------------------------------------------------------------------------- {% endcomment %}
+{% else %}
+<h1>Developer Dashboard</h1>
+<hr>
+<h3>Projects</h3>
+<hr>
+<div class="draft-table">
+  <table id="dataTable" class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Submission Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for project in projects %}
+      <tr>
+        <td>
+          <a href="{% url 'bugtracker:project_detail' project.id %}">{{project}}</a>
+        </td>
+        <td>
+          {{project.submission_date}}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<hr>
+<br>
+{% comment %} CHART {% endcomment %}
+<div class="d-flex flex-wrap flex-row justify-content-between">
+  <div class="card p-5">
+    <h5 class="card-header">Ticket By Types</h5>
+    <div class="card-body">
+      <canvas id="myChart" width="200" height="200"></canvas>
+    </div>
+  </div>
+  <div class="card p-5">
+    <h5 class="card-header">Ticket By Priority</h5>
+    <div class="card-body">
+      <canvas id="myChart1" width="200" height="200"></canvas>
+    </div>
+  </div>
+  <div class="card p-5">
+    <h5 class="card-header">Ticket By Status</h5>
+    <div class="card-body">
+      <canvas id="myChart2" width="200" height="200"></canvas>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
+<script>
+  const ctx = document.getElementById('myChart');
+  const ctx1 = document.getElementById('myChart1');
+  const ctx2 = document.getElementById('myChart2');
+
+
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: [{% for data in types %}'{{data.type}}',{% endfor %}],
+    datasets: [{
+      label: '# of Projects',
+      data: ["{{tickets_type_featurerequired_count}}", "{{tickets_type_issue_count}}", "{{tickets_type_bug_count}}"],
+      borderWidth: 1
+    }]
+    },
+    options: {
+    responsive: false,
+  },
+    plugins: {
+    tooltip: {
+      enabled: false,
+    }
+  }
+  });
+  new Chart(ctx1, {
+    type: 'doughnut',
+    data: {
+      labels: [{% for data in priorities %}'{{data.priority}}',{% endfor %}],
+    datasets: [{
+      label: '# of Projects',
+      data: ["{{tickets_priority_low_count}}", "{{tickets_priority_intermediate_count}}", "{{tickets_priority_high_count}}"],
+      borderWidth: 1
+    }]
+    },
+    options: {
+    responsive: false,
+  }
+  });
+  new Chart(ctx2, {
+    type: 'doughnut',
+    data: {
+      labels: [{% for data in status %}'{{data.status}}',{% endfor %}],
+    datasets: [{
+      label: '# of Projects',
+      data: ["{{tickets_priority_open_count}}", "{{tickets_priority_inprogress_count}}", "{{tickets_priority_resolved_count}}", "{{tickets_priority_closed_count}}"],
+      borderWidth: 1
+    }]
+    },
+    options: {
+    responsive: false,
+  }
+  });
+
+
+
+</script>
+
+{% endblock content %}
