@@ -129,4 +129,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # AUTH_USER_MODEL = 'accounts.CustomUserRoleChoices'
 
-CSRF_TRUSTED_ORIGINS = ["https://web-production-24647.up.railway.app/"]
