@@ -12,7 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-1ra@-9fs%fi&1as08ncsf6gn-3j=bs#&wm$a_fc39s@=w7d!k6'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 #railway
 ALLOWED_HOSTS = ["*"]
@@ -126,3 +126,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "static_project/imgs")
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # AUTH_USER_MODEL = 'accounts.CustomUserRoleChoices'
+
+CSRF_TRUSTED_ORIGINS = ["https://railway.app/"]
