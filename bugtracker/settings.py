@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'table',
     "django_bootstrap5",
     "bootstrap_datepicker_plus",
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -43,6 +44,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'bugtracker.urls'
@@ -127,4 +129,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # AUTH_USER_MODEL = 'accounts.CustomUserRoleChoices'
 
-CSRF_TRUSTED_ORIGINS = ["https://railway.app/"]
+CSRF_TRUSTED_ORIGINS = ["https://web-production-24647.up.railway.app/"]
