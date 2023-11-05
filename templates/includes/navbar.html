@@ -10,8 +10,7 @@
                 <div class="list-group list-group-flush my-3">
                         {% if user.is_authenticated %}
                         <h6 class="list-group-item list-group-item-action bg-transparent second-text active">
-                                Logged in as <span
-                                        style="color: #2ECA6A;">{{request.user.profile.first_name|title}}</span>
+                                User: <span style="color: #2ECA6A;">{{request.user.profile.first_name|title}}</span>
                                 <br>
                                 <br>
                                 Role: <span style="color: #2ECA6A;">{{request.user.profile.role.role}}</span>
@@ -22,6 +21,9 @@
                                         class="fas fa-chart-line me-2"></i>Dashboard</a>
 
                         {% if request.user.profile.role.role == "Admin" %}
+                        <a href="{% url 'bugtracker:reports' %}"
+                                class="list-group-item list-group-item-action bg-transparent second-text active"><i
+                                        class="far fa-folder me-2"></i>Import/Export</a>
                         <a href="{% url 'bugtracker:manage_role_assignment' %}"
                                 class="list-group-item list-group-item-action bg-transparent second-text active"><i
                                         class="fas fa-user-tag me-2"></i>Manage Role Assignment</a>
@@ -63,6 +65,11 @@
                                 class="list-group-item list-group-item-action bg-transparent fw-bold active"><i
                                         class="fab fa-wpforms me-2"></i>Register User</a>
                         {% endif %}
+
+                        <a href="{% url 'bugtracker:about' %}"
+                                class="list-group-item list-group-item-action bg-transparent fw-bold active">
+                                <i class="far fa-address-card"></i> About
+                        </a>
 
                         <a href="{% url 'accounts:logout_view' %}"
                                 class="list-group-item list-group-item-action bg-transparent text-danger fw-bold active"><i

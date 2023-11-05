@@ -18,14 +18,19 @@
     href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500&family=Markazi+Text:wght@400;500;600;700&family=Montserrat:ital,wght@1,100&family=Nunito:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;1,400;1,500;1,600;1,700&family=Quicksand:wght@300;400;500;600;700&family=Roboto:wght@100&family=Yeseva+One&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+
+
   <script defer src="https://code.jquery.com/jquery-3.7.0.js"></script>
   <script defer src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
   <script defer src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
     crossorigin="anonymous"></script>
-
+  <!-- Data table CSS -->
+  <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css"> -->
+  <link
+    href="https://cdn.datatables.net/v/bs5/jq-3.7.0/jszip-3.10.1/dt-1.13.7/b-2.4.2/b-html5-2.4.2/b-print-2.4.2/datatables.min.css"
+    rel="stylesheet">
   <style>
     :root {
       --main-bg-color: #012970;
@@ -65,6 +70,10 @@
     body {
       font-family: 'Nunito', sans-serif;
 
+    }
+
+    .ticket-label {
+      font-weight: 600;
     }
 
 
@@ -189,6 +198,7 @@
       object-fit: cover;
     }
 
+    /* DataTable */
     #dataTable {
       font-family: Arial, Helvetica, sans-serif;
       border-collapse: collapse;
@@ -218,9 +228,60 @@
       color: white;
     }
 
+    /* Datatable projects */
+    #dataTableProjects {
+      font-family: Arial, Helvetica, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    #dataTableProjects th {
+      background-color: #595957 !important;
+    }
+
+    #dataTableProjects td,
+    #draft-table th {
+      padding: 1rem 3rem;
+    }
+
+    #dataTableProjects tr:nth-child(even) {
+      background-color: #fafafa;
+    }
+
+
+
+    #dataTableProjects th {
+      padding-top: 12px;
+      padding-bottom: 12px;
+      text-align: left;
+      background-color: #ccc;
+      color: white;
+    }
+
     .navbar-top {
       display: flex;
       justify-content: space-between;
+    }
+
+    /* DATATABLES */
+    .dataTables_paginate {
+      margin-top: -40px !important;
+    }
+
+    /* Input Search */
+    /* .dataTables_filter {
+      margin-bottom: 20px;
+      display: none;
+    } */
+
+    /* .dataTables_length {
+      float: right !important;
+      margin-top: 10px !important;
+    } */
+
+    /* Group buttons */
+    .dt-buttons {
+      margin-top: 10px !important;
     }
   </style>
 </head>
@@ -229,13 +290,38 @@
 
   {% include 'includes/navbartop.html' %}
   {% include 'includes/navbar.html' %}
+
   <div id="page-content-wrapper">
+
     {% if messages %}
     {% for message in messages %}
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+    <div class="alert alert-primary alert-dismissible fade show" role="alert" id="message_container">
       {{message}}
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
+    {% endif %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert" id="message_container">
+      {{message}}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+    <div class="alert alert-error alert-dismissible fade show" role="alert" id="message_container">
+      {{message}}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert" id="message_container">
+      {{message}}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+
+
     {% endfor %}
     {% endif %}
     {% block content %}
@@ -253,10 +339,19 @@
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"
     integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
   <!-- Data table JS -->
-  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+  <!-- <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script> -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+  <script
+    src="https://cdn.datatables.net/v/bs5/jq-3.7.0/jszip-3.10.1/dt-1.13.7/b-2.4.2/b-html5-2.4.2/b-print-2.4.2/datatables.min.js"></script>
 
   <script>
+    var message_ele = document.getElementById("message_container");
+
+    setTimeout(function () {
+      message_ele.style.display = "none";
+    }, 3000);
     // var el = document.getElementById("wrapper");
     // var toggleButton = document.getElementById("menu-toggle");
 
@@ -273,14 +368,259 @@
       autoWidth: true, // control the auto width on columns
       searching: true, // Input search
       bInfo: true, // Info on footer
-      bSort: true, // Filter A to Z and Z to A (and numbers)
+      bSort: false, // Filter A to Z and Z to A (and numbers)
       // disable columns with specific filter A to Z, Z to A
       // "columnDefs": [{
       //   "targets": 5, //  1 column
       //   "targets": [4, 5], // More than 1 column
       //   "orderable": false,
       // }]
+      // *BUTTONS
+      dom: 'lBfrtip',
+      buttons: [
+        {
+          // COPY
+          extend: 'copy',
+          text: '<i class="fas fa-clone"></i>',
+          className: 'btn btn-secondary',
+          titleAttr: 'Copy',
+          // Choose the columns you wish to copy
+          exportOptions: {
+            columns: [0, 1, 2, 3, 4]
+          },
+        },
+        {
+          // EXCEL
+          extend: 'excel',
+          text: '<i class="fas fa-file-excel"></i>',
+          className: 'btn btn-secondary',
+          titleAttr: 'Excel',
+          // Choose the columns you wish to export to excel
+          exportOptions: {
+            columns: [0, 1, 2, 3, 4]
+          },
+        },
+        {
+          // PRINT
+          extend: 'print',
+          text: '<i class="fas fa-print"></i>',
+          className: 'btn btn-secondary',
+          titleAttr: 'Print',
+          // Choose the columns you wish to Print
+          exportOptions: {
+            columns: [0, 1, 2, 3, 4]
+          },
+          // Font Size (when export to print)
+          customize: function (win) {
+            $(win.document.body).css('font-size', '10pt')
+            $(win.document.body).find('table')
+              .addClass('compact')
+              .css('font-size', 'inherit');
+          }
+        },
+        {
+          // PDF
+          extend: 'pdf',
+          text: '<i class="fas fa-file-pdf"></i>',
+          className: 'btn btn-secondary',
+          titleAttr: 'PDF',
+          // Choose the columns you wish to export to pdf
+          exportOptions: {
+            columns: [0, 1, 2, 3, 4]
+          },
+          // Center the table
+          tableHeader: {
+            alignment: 'center'
+          },
+          // Font size and optimization
+          customize: function (doc) {
+            doc.styles.tableHeader.alignment = 'center';//header position
+            doc.styles.tableBodyOdd.alignment = 'center';//Body position 1 (grey color)
+            doc.styles.tableBodyEven.alignment = 'center';//Body position 1 (white color)
+            doc.styles.tableHeader.fontSize = 7; //Header font-size
+            doc.defaultStyle.fontSize = 6; //Body font-size
+            // to get 100% width of the table
+            doc.content[1].table.widths = Array(doc.content[1].table.body[1].length + 1).join('*').split('');
+          }
+        },
+
+      ]
     });
+
+    $("#dataTableProjects").DataTable({
+      //Datatables configurations
+      paging: true, // Pagination
+      pageLength: 10, // Data per page
+      lengthChange: true, // show entries per page
+      autoWidth: true, // control the auto width on columns
+      searching: true, // Input search
+      bInfo: true, // Info on footer
+      bSort: false, // Filter A to Z and Z to A (and numbers)
+      // disable columns with specific filter A to Z, Z to A
+      // "columnDefs": [{
+      //   "targets": 5, //  1 column
+      //   "targets": [4, 5], // More than 1 column
+      //   "orderable": false,
+      // }]
+      // *BUTTONS
+      dom: 'lBfrtip',
+      buttons: [
+        {
+          // COPY
+          extend: 'copy',
+          text: '<i class="fas fa-clone"></i>',
+          className: 'btn btn-secondary',
+          titleAttr: 'Copy',
+          // Choose the columns you wish to copy
+          exportOptions: {
+            columns: [0, 1]
+          },
+        },
+        {
+          // EXCEL
+          extend: 'excel',
+          text: '<i class="fas fa-file-excel"></i>',
+          className: 'btn btn-secondary',
+          titleAttr: 'Excel',
+          // Choose the columns you wish to export to excel
+          exportOptions: {
+            columns: [0, 1]
+          },
+        },
+        {
+          // PRINT
+          extend: 'print',
+          text: '<i class="fas fa-print"></i>',
+          className: 'btn btn-secondary',
+          titleAttr: 'Print',
+          // Choose the columns you wish to Print
+          exportOptions: {
+            columns: [0, 1]
+          },
+          // Font Size (when export to print)
+          customize: function (win) {
+            $(win.document.body).css('font-size', '10pt')
+            $(win.document.body).find('table')
+              .addClass('compact')
+              .css('font-size', 'inherit');
+          }
+        },
+        {
+          // PDF
+          extend: 'pdf',
+          text: '<i class="fas fa-file-pdf"></i>',
+          className: 'btn btn-secondary',
+          titleAttr: 'PDF',
+          // Choose the columns you wish to export to pdf
+          exportOptions: {
+            columns: [0, 1]
+          },
+          // Center the table
+          tableHeader: {
+            alignment: 'center'
+          },
+          // Font size and optimization
+          customize: function (doc) {
+            doc.styles.tableHeader.alignment = 'center';//header position
+            doc.styles.tableBodyOdd.alignment = 'center';//Body position 1 (grey color)
+            doc.styles.tableBodyEven.alignment = 'center';//Body position 1 (white color)
+            doc.styles.tableHeader.fontSize = 7; //Header font-size
+            doc.defaultStyle.fontSize = 6; //Body font-size
+            // to get 100% width of the table
+            doc.content[1].table.widths = Array(doc.content[1].table.body[1].length + 1).join('*').split('');
+          }
+        },
+
+      ]
+    });
+
+    $("#dataTableTickets").DataTable({
+      //Datatables configurations
+      paging: true, // Pagination
+      pageLength: 10, // Data per page
+      lengthChange: true, // show entries per page
+      autoWidth: true, // control the auto width on columns
+      searching: true, // Input search
+      bInfo: true, // Info on footer
+      bSort: false, // Filter A to Z and Z to A (and numbers)
+      // disable columns with specific filter A to Z, Z to A
+      // "columnDefs": [{
+      //   "targets": 5, //  1 column
+      //   "targets": [4, 5], // More than 1 column
+      //   "orderable": false,
+      // }]
+      // *BUTTONS
+      dom: 'lBfrtip',
+      buttons: [
+        {
+          // COPY
+          extend: 'copy',
+          text: '<i class="fas fa-clone"></i>',
+          className: 'btn btn-secondary',
+          titleAttr: 'Copy',
+          // Choose the columns you wish to copy
+          exportOptions: {
+            columns: [0, 1, 2, 3, 4]
+          },
+        },
+        {
+          // EXCEL
+          extend: 'excel',
+          text: '<i class="fas fa-file-excel"></i>',
+          className: 'btn btn-secondary',
+          titleAttr: 'Excel',
+          // Choose the columns you wish to export to excel
+          exportOptions: {
+            columns: [0, 1, 2, 3, 4]
+          },
+        },
+        {
+          // PRINT
+          extend: 'print',
+          text: '<i class="fas fa-print"></i>',
+          className: 'btn btn-secondary',
+          titleAttr: 'Print',
+          // Choose the columns you wish to Print
+          exportOptions: {
+            columns: [0, 1, 2, 3, 4]
+          },
+          // Font Size (when export to print)
+          customize: function (win) {
+            $(win.document.body).css('font-size', '10pt')
+            $(win.document.body).find('table')
+              .addClass('compact')
+              .css('font-size', 'inherit');
+          }
+        },
+        {
+          // PDF
+          extend: 'pdf',
+          text: '<i class="fas fa-file-pdf"></i>',
+          className: 'btn btn-secondary',
+          titleAttr: 'PDF',
+          // Choose the columns you wish to export to pdf
+          exportOptions: {
+            columns: [0, 1, 2, 3, 4]
+          },
+          // Center the table
+          tableHeader: {
+            alignment: 'center'
+          },
+          // Font size and optimization
+          customize: function (doc) {
+            doc.styles.tableHeader.alignment = 'center';//header position
+            doc.styles.tableBodyOdd.alignment = 'center';//Body position 1 (grey color)
+            doc.styles.tableBodyEven.alignment = 'center';//Body position 1 (white color)
+            doc.styles.tableHeader.fontSize = 7; //Header font-size
+            doc.defaultStyle.fontSize = 6; //Body font-size
+            // to get 100% width of the table
+            doc.content[1].table.widths = Array(doc.content[1].table.body[1].length + 1).join('*').split('');
+          }
+        },
+
+      ]
+    });
+
     // enable Searchbox outside
     var newSearch = $("#dataTable").DataTable();
     $("#search").keyup(function () {

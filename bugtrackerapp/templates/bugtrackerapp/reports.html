@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+<h1>Reports</h1>
+<h6>
+  <a href="{% url 'bugtracker:tickets_export_to_csv' %}">Export Tickets Data to CSV</a>
+</h6>
+<h6>
+  <a href="{% url 'bugtracker:tickets_export_to_xlsx' %}">Export Tickets Data to Excel/Xlsx</a>
+</h6>
+{% endblock content %}

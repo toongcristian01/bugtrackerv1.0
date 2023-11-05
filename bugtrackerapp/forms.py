@@ -84,8 +84,66 @@ class CreateTicketForm(forms.ModelForm):
 class EditTicketForm(forms.ModelForm):
   class Meta:
     model = Ticket
-    fields = '__all__'
-    exclude = ('updated', 'created', 'project', 'author')
+    #fields = '__all__'
+    fields = ('title', 'ticket_description', 'image', 'project', 'assign_members', 'type', 'priority', 'status')
+    labels = {
+    'title': 'Title',
+    'ticket_description': 'Description',
+    'image': 'Image',
+    'project': 'Project',
+    'assign_members': 'Assign Members',
+    'type': 'Type',
+    'priority': 'Priority',
+    'status': 'Status',
+  }
+    widgets = {
+    'title': forms.TextInput(attrs={'class':'form-control', 'placeholder': 'Name'}),
+    'ticket_description': forms.Textarea(attrs={'class':'form-control', 'style':'resize:none;', 'rows':10, 'cols': 40,  'placeholder': 'Description'}),
+    'image': forms.FileInput(),
+    'project': forms.Select(attrs={'class':'form-control'}),
+    'assign_members': forms.CheckboxSelectMultiple(),
+    'type': forms.Select(attrs={'class':'form-control'}),
+    'priority': forms.Select(attrs={'class':'form-control'}),
+    'status': forms.Select(attrs={'class':'form-control'}),
+    }
+class EditTicketTester(forms.ModelForm):
+  class Meta:
+    model = Ticket
+    #fields = '__all__'
+    fields = ('title', 'ticket_description', 'image', 'project', 'assign_members', 'type', 'priority', 'status')
+    labels = {
+    'title': 'Title',
+    'ticket_description': 'Description',
+    'image': 'Image',
+    'project': 'Project',
+    'assign_members': 'Assign Members',
+    'type': 'Type',
+    'priority': 'Priority',
+    'status': 'Status',
+  }
+    widgets = {
+    'title': forms.TextInput(attrs={'class':'form-control', 'placeholder': 'Name'}),
+    'ticket_description': forms.Textarea(attrs={'class':'form-control', 'style':'resize:none;', 'rows':10, 'cols': 40,  'placeholder': 'Description'}),
+    'image': forms.FileInput(),
+    'project': forms.Select(attrs={'class':'form-control'}),
+    'assign_members': forms.CheckboxSelectMultiple(),
+    'type': forms.Select(attrs={'class':'form-control'}),
+    'priority': forms.Select(attrs={'class':'form-control'}),
+    'status': forms.Select(attrs={'class':'form-control'}),
+    }
+
+class EditTicketFormDev(forms.ModelForm):
+  class Meta:
+    model = Ticket
+    #fields = '__all__'
+    fields = ('status',)
+    labels = {
+    'status': 'Status',
+  }
+    widgets = {
+    'status': forms.Select(attrs={'class':'form-control'}),
+    }
+
 
 class CommentForm(forms.ModelForm):
   #body = forms.CharField(widget=forms.TextInput(attrs={'class':'input','placeholder': 'Enter Comment'}), required=False)

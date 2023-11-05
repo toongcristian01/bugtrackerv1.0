@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 from .models import Role,EmployeeProfile
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
+from bugtrackerapp.decorators import role_required
 
 
 def login_view(request):
@@ -25,16 +26,19 @@ def login_view(request):
     if user is not None and user.profile.role.role == "Admin":
       is_admin_login = True
       login(request, user)
+      messages.success(request, f'Welcome {request.user.profile}')
       #return redirect('bugtracker:admin_dashboard')
       return redirect('bugtracker:home')
     elif user is not None and user.profile.role.role == 'Tester':
         is_tester_login = True
         login(request, user)
+        messages.success(request, f'Welcome {request.user.profile}')
         #return redirect('bugtracker:tester_dashboard')
         return redirect('bugtracker:home')
     elif user is not None and user.profile.role.role == 'Developer':
         is_developer_login = True
         login(request, user)
+        messages.success(request, f'Welcome {request.user.profile}')
         #return redirect('bugtracker:developer_dashboard')
         return redirect('bugtracker:home')
     else:
@@ -69,6 +73,7 @@ def login_view(request):
 
 
 @login_required(login_url="/")
+@role_required(allowed_roles=["Admin"])
 def register_view(request):
   # role = CustomUserRoleChoices()
   if request.method == 'POST':
@@ -84,5 +89,5 @@ def register_view(request):
 @login_required(login_url="/")
 def logout_view(request):
   logout(request)
-  messages.error(request, 'You Were Logged Out!')
+  messages.warning(request, 'You Were Logged Out!')
   return redirect('accounts:login_view')

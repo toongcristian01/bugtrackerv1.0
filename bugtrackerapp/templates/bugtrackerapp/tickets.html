@@ -3,9 +3,14 @@
 
 
 {% block content %}
+
+
+
+
+
 <h1>Tickets ({{tickets_count}})</h1>
 <div class="draft-table">
-  <table class="table" id="dataTable">
+  <table class="table" id="dataTableTickets">
     <thead>
       <tr>
         <th scope="col">Title</th>
@@ -13,6 +18,7 @@
         <th scope="col">status</th>
         <th scope="col">Author</th>
         <th scope="col">Created Date</th>
+
       </tr>
     </thead>
     <tbody>
@@ -28,7 +34,7 @@
           {{ticket.status}}
         </td>
         <td>{{ticket.author}} - {{ticket.author.role.role}}</td>
-        <td>{{ticket.created|date:"M, d, Y"}}</td>
+        <td>{{ticket.created|date:"n/j/Y"}}</td>
       </tr>
       {% endfor %}
     </tbody>
@@ -69,6 +75,46 @@
   </table>
 </div>
 
+<br>
+<hr>
+{% if request.user.profile.role.role == "Admin" %}
+<h1>History</h1>
+<p>
+  <a href="{% url 'bugtracker:history_delete'%}">Delete</a>
+</p>
+<div class="draft-table">
+  <table class="table" id="dataTable">
+    <thead>
+      <tr>
+        <th scope="col">Object</th>
+        <th scope="col">Date/Time</th>
+        <th scope="col">Comment</th>
+        <th scope="col">Changed By</th>
+        <th scope="col">Change Reason</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for h in history %}
+      <tr>
+        <td>
+          {{h.history_object}}
+        </td>
+        <td>
+          {{h.history_date}}
+        </td>
+        <td>
+          {{h.historical_comment}}
+        </td>
+        <td>{{h.history_user}}</td>
+        <td>{{h.history_change_reason}}</td>
 
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+
+{% endif %}
 
 {% endblock content %}

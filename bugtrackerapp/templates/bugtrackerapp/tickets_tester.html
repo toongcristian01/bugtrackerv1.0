@@ -19,7 +19,7 @@
       {% for ticket in tickets %}
       <tr>
         <td>
-          <a href="{% url 'bugtracker:project_detail' ticket.project.id %}">{{ticket.title}}</a>
+          <a href="{% url 'bugtracker:ticket_detail' ticket.id %}">{{ticket.title}}</a>
         </td>
         <td>
           {{ticket.ticket_description}}
@@ -27,7 +27,9 @@
         <td>{{ticket.status}}</td>
         <td>{{ticket.created|date:"M, d, Y"}}</td>
         <td>
-          <a href="{% url 'bugtracker:ticket_detail' ticket.id %}">Update</a>
+          <a href="{% url 'bugtracker:ticket_detail' ticket.id %}">
+            <i class="far fa-edit"></i>
+          </a>
         </td>
       </tr>
       {% endfor %}

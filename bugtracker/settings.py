@@ -12,7 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-1ra@-9fs%fi&1as08ncsf6gn-3j=bs#&wm$a_fc39s@=w7d!k6'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 #railway
 ALLOWED_HOSTS = ["*"]
@@ -34,17 +34,19 @@ INSTALLED_APPS = [
     "django_bootstrap5",
     "bootstrap_datepicker_plus",
     'corsheaders',
+    'simple_history',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    #'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'simple_history.middleware.HistoryRequestMiddleware',
 ]
 
 ROOT_URLCONF = 'bugtracker.urls'
@@ -113,14 +115,26 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
+
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'static_project')
+# ]
+
+# STATIC_URL = '/static/'
+# STATIC_ROOT = os.path.join(BASE_DIR, "static_root")
+
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, "static_project/imgs")
+
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static_project')
-]
-STATIC_ROOT = os.path.join(BASE_DIR, "static_root")
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, "static_project/imgs")
+
+STATIC_ROOT = BASE_DIR / 'static_root'
+
+MEDIA_ROOT = BASE_DIR / 'media_root'
+
+STATICFILES_DIRS = [BASE_DIR / 'static_files']
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -129,4 +143,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # AUTH_USER_MODEL = 'accounts.CustomUserRoleChoices'
 
-CSRF_TRUSTED_ORIGINS = ["https://web-production-5c06.up.railway.app/"]
+# CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:8000"]
+

@@ -3,23 +3,24 @@
 
 
 {% block content %}
+
 <h1>Ticket Detail</h1>
 <hr>
 <div class="d-flex flex-row flex-wrap justify-content-between">
   <div class="info">
-    <p>Title: {{ticket.title}}</p>
-    <p>Description: {{ticket.ticket_description}}</p>
-    <p>Project: {{ticket.project}}</p>
-    <p>Author: {{ticket.author}}</p>
-    <p>Assigned Members:</p>
+    <p><label class="ticket-label">Title:</label> {{ticket.title}}</p>
+    <p><label class="ticket-label">Description:</label> {{ticket.ticket_description}}</p>
+    <p><label class="ticket-label">Project:</label> {{ticket.project}}</p>
+    <p><label class="ticket-label">Author:</label> {{ticket.author}}</p>
+    <p><label class="ticket-label">Assigned Members:</label></p>
     {% for devs in ticket.assign_members.all %}
     <p>{{devs}}</p>
     {% endfor %}
   </div>
   <div class="info2">
-    <p>Type: {{ticket.type}}</p>
-    <p>Priority: {{ticket.priority}}</p>
-    <p>Status: {{ticket.status}}</p>
+    <p><label class="ticket-label">Type:</label> {{ticket.type}}</p>
+    <p><label class="ticket-label">Priority:</label> {{ticket.priority}}</p>
+    <p><label class="ticket-label">Status:</label> {{ticket.status}}</p>
   </div>
 </div>
 <hr>
@@ -32,20 +33,33 @@
     </div>
     {% endif %}
     <br><br>
-    {% if is_user_ticket or is_developer_ticket or request.user.profile.role.role == "Admin" %}
+    {% if is_user_ticket %}
     <a href="{% url 'bugtracker:ticket_update' ticket.id %}" class="btn btn-warning">Update</a>
+    <a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</a>
+    {% elif is_tester_ticket and request.user.profile.role.role == "Tester" %}
+    <a href="{% url 'bugtracker:ticket_update' ticket.id %}" class="btn btn-warning">Update</a>
+    {% endif %}
+    <!-- {% if is_user_ticket and is_tester_ticket%}
     <a href="{% url 'bugtracker:ticket_delete' ticket.id %}" class="btn btn-danger">Delete</a>
+    {% endif %} -->
+
+    {% if is_developer_ticket and request.user.profile.role.role == "Developer" %}
+    <form method="POST">
+      {{edit_ticket_dev_form}}
+      {% csrf_token %}
+      <br>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
     {% endif %}
   </div>
   <div>
     <div class="card">
       <div class="card-body">
-        <h4>Add Comment</h4>
         <form method="POST">
           {% csrf_token %}
           {{comment_form}}
           <br>
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="submit" class="btn btn-primary">Add Comment</button>
         </form>
       </div>
     </div>
@@ -55,8 +69,22 @@
         {% for comment in comments %}
         <div class="card mb-3">
           <div class="card-body">
-            <h6>{{comment.name}} - {{comment.date}}</h6>
-            <h5>{{comment.body}}</h5>
+            <div class="d-flex justify-content-between">
+              <div>
+                <small>{{comment.name}} - {{comment.date}}</small>
+              </div>
+
+
+              {% if comment.name == request.user.profile %}
+              <div>
+                <a href="{% url  'bugtracker:comment_delete' comment.id %}"><i class="far fa-trash-alt"></i></a>
+              </div>
+              {% endif %}
+
+
+            </div>
+
+            <h6>{{comment.body}}</h6>
           </div>
         </div>
         {% endfor %}
