@@ -324,6 +324,7 @@ def ticket_delete(request, ticket_id):
   ticket = get_object_or_404(Ticket, id=ticket_id)
   ticket_project_id = ticket.project.id
   ticket.delete()
+  messages.warning(request, 'Ticket Deleted')
   return redirect(reverse('bugtracker:project_detail', args=[ticket_project_id]))
 
 @login_required(login_url="/")
