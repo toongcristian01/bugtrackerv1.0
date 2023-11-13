@@ -65,3 +65,27 @@ class Comment(models.Model):
   date = models.DateTimeField(auto_now_add=True)
   def __str__(self):
     return self.body[0:20]
+
+
+NOTIFICATION_TYPE = (
+  ('New Ticket', 'New Ticket'),
+)
+
+class Notification(models.Model):
+  notif_receiver = models.ManyToManyField(EmployeeProfile, blank=True, related_name="noti_user")
+  sender = models.ForeignKey(EmployeeProfile, on_delete=models.SET_NULL, null=True, blank=True, related_name="noti_sender")
+  ticket = models.ForeignKey(Ticket, on_delete=models.SET_NULL, null=True, blank=True, related_name="noti_post")
+  comment = models.ForeignKey(Comment, on_delete=models.SET_NULL, null=True, blank=True, related_name="noti_comment")
+  notification_type = models.CharField(max_length=100, choices=NOTIFICATION_TYPE, default="none")
+  is_read = models.BooleanField(default=False)
+  date = models.DateTimeField(auto_now_add=True)
+  
+  class Meta:
+    ordering = ('-date',)
+  
+  def mark_as_read_count(self):
+    return self.objects.filter(is_read=True).count()
+
+  @classmethod
+  def is_read_query(cls, threshold):
+      return cls.objects.filter(value__gt=threshold)

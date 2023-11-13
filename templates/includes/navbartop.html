@@ -1,17 +1,116 @@
 {% load static %}
 {% if user.is_authenticated %}
 <div class="navbar-top">
-  <div class="logo"></div>
-  <div class="dropdown">
-    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-      Dropdown link
-    </a>
-
-    <ul class="dropdown-menu">
-      <li><a class="dropdown-item" href="#">Action</a></li>
-      <li><a class="dropdown-item" href="#">Another action</a></li>
-      <li><a class="dropdown-item" href="#">Something else here</a></li>
-    </ul>
+  <div class="sidebar-heading text-center py-4 primary-text fs-4 fw-bold text-uppercase border-bottom"><i
+      class="fas fa-user-secret me-2"></i>
+    <a href="{% url 'bugtracker:home' %}">Bug Tracker V1</a>
   </div>
+
+  <div class="navbar-menus">
+    <div class="dropdown">
+      <a class="btn btn-secondary" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fas fa-bell"></i>
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+
+
+          {{notification_count}}
+
+
+
+          <span class="visually-hidden">unread messages</span>
+        </span>
+      </a>
+      <div class="dropdown-menu notifs">
+        <div class="notif-title">
+          <h6>Notifications</h6>
+        </div>
+
+        {% for n in notification %}
+        <div class="notif-item">
+
+          <a class="notif-item-inner dropdown-item" href="{% url 'bugtracker:ticket_detail' n.ticket.id %}">
+            <div class="notif-info">
+              {% if n.sender.avatar %}
+              <div class="notif-avatar">
+                <img src="{{n.sender.avatar.url}}" alt="profile-pic">
+              </div>
+              {% else %}
+              <div class="notif-profile-img">
+                <div class="notif-profile-initials" id="changeColor2">
+                  <div>{{n.sender.first_name.0|upper}}</div>
+                  <div>{{n.sender.last_name.0|upper}}</div>
+                </div>
+              </div>
+              {% endif %}
+
+              {% if n.notification_type == "New Ticket" %}
+              <div class="notif-text">
+                <p>{{n.sender.get_fullname|title}} assigned you a new ticket.</p>
+                <p>Ticket #{{n.ticket.id}} - {{n.ticket|truncatechars:24}}</p>
+              </div>
+              {% endif %}
+              {% if n.notification_type == "Update Ticket" %}
+              <div class="notif-text">
+                <p>{{n.sender.get_fullname|title}} updated your ticket.</p>
+                <p>Ticket #{{n.ticket.id}} - {{n.ticket|truncatechars:24}}</p>
+              </div>
+              {% endif %}
+              {% if n.notification_type == "New Comment" %}
+              <div class="notif-text">
+                <p>{{n.sender.get_fullname|title}} commented in your ticket.</p>
+                <p>Ticket #{{n.ticket.id}} - {{n.ticket|truncatechars:24}}</p>
+              </div>
+              {% endif %}
+            </div>
+
+            <div class="notif-date">
+              {{n.date|timesince}} ago
+            </div>
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <!-- ACCOUNT -->
+    <div class="dropdown dropdown-account">
+      <a class="btn btn-secondary dropdown-account-toggle" href="#" role="button" data-bs-toggle="dropdown"
+        aria-expanded="false">
+        <img src="{{request.user.profile.avatar.url}}" alt="profile-pic" class="dropdown-account-profile-pic">
+        <span class=" dropdown-toggle">{{request.user.profile.first_name.0|title}}.
+          {{request.user.profile.last_name|capfirst}}</span>
+      </a>
+      <div class="dropdown-menu notifs">
+        <div class="notif-title">
+          <h6>Cristian</h6>
+          <h6>Web Designer</h6>
+        </div>
+
+        <a class="notif-item-inner dropdown-item" href="#">
+          ab
+        </a>
+      </div>
+    </div>
+  </div>
+
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Function to generate a random hex color
+    function getRandomColor() {
+      const letters = '0123456789ABCDEF';
+      let color = '#';
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+
+    // Change the background color when the button is clicked
+    window.addEventListener('load', function () {
+      const newColor = getRandomColor();
+      document.getElementById('changeColor2').style.backgroundColor = newColor;
+    });
+  });
+</script>
 {% endif %}

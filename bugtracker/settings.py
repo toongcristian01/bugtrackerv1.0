@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     "bootstrap_datepicker_plus",
     'corsheaders',
     'simple_history',
+    'django_initials_avatar',
 ]
 
 MIDDLEWARE = [
@@ -62,6 +63,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'bugtrackerapp.context_processors.my_context_processor',
             ],
         },
     },

@@ -3,8 +3,8 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.contrib import messages
-from .models import Comment, Project, Ticket, Type, Priority, Status
-from accounts.models import EmployeeProfile, Role
+from .models import Comment, Project, Ticket, Type, Priority, Status, Notification
+from accounts.models import EmployeeProfile, Role, generate_initials_image
 from .forms import CommentForm, EditTicketForm, CreateProjectFormAdmin, EditProjectFormAdmin, CreateTicketForm,  ManageRoleAssignment, EditManageRoleAssignment, EditTicketFormDev
 from django.contrib.auth.models import User
 from django.db.models import Q
@@ -18,8 +18,12 @@ import csv
 import datetime
 from datetime import date
 
-def is_valid_queryparam(param):
-  return param != '' and param is not None
+noti_new_ticket = "New Ticket"
+noti_update_ticket = "Update Ticket"
+noti_new_comment = "New Comment"
+
+def image_initials(first_name, last_name):
+  pass
 
 
 @login_required(login_url="/")
@@ -144,14 +148,33 @@ def add_project(request):
       return redirect('bugtracker:projects_view')
   return render(request, 'bugtrackerapp/add_project.html', {'add_project_form':add_project_form})
 
+def send_notification(receivers=None, sender=None, ticket=None, comment=None, notification_type=None):
+  notification = Notification.objects.create(
+    sender=sender,
+    ticket=ticket,
+    comment=comment,
+    notification_type=notification_type,
+  )
+  #*receivers -> turning list to an argument
+  notification.notif_receiver.add(*receivers)
+  return notification
+
 @login_required(login_url="/")
 @role_required(allowed_roles=["Admin", "Tester"])
 def add_ticket(request):
   add_ticket_form = CreateTicketForm(request.POST or None, request.FILES or None)
+  assigned_users = []
+  noti_ticket = ''
   if request.method == 'POST':
     add_ticket_form = CreateTicketForm(request.POST or None, request.FILES or None)
     if add_ticket_form.is_valid():
       add_ticket_form.save()
+      currently_added_ticket = Ticket.objects.all().order_by('-created')[0]
+      for u in currently_added_ticket.assign_members.all():
+        assigned_users.append(u.profile)
+        assigned_users.append(request.user.profile)
+      send_notification(assigned_users, request.user.profile, currently_added_ticket, None, noti_new_ticket)
+      messages.success(request, 'Ticked Added')
       return redirect('bugtracker:projects_view')
   return render(request, 'bugtrackerapp/add_ticket.html', {'add_ticket_form':add_ticket_form})
 
@@ -238,6 +261,8 @@ def tickets_export_to_xlsx(request):
 def ticket_detail(request, ticket_id):
   comment = ''
   comment_user = ''
+  assigned_users = []
+  image_url = ''
   comment_form = CommentForm(request.POST or None)
   ticket = get_object_or_404(Ticket, id=ticket_id)
   edit_ticket_dev_form = EditTicketFormDev(instance=ticket)
@@ -248,6 +273,12 @@ def ticket_detail(request, ticket_id):
   is_tester_ticket = ticket.assign_members.contains(request.user)
   # comment
   comments = Comment.objects.filter(ticket=ticket).order_by('-date')
+
+  # noti_ticket = Notification.objects.get(ticket=ticket)
+  # noti_ticket.is_read = True
+  # noti_ticket.save()
+  # print(noti_ticket.is_read)
+
   # Ticket update form
   if request.method == "POST":
     edit_ticket_dev_form = EditTicketFormDev(request.POST or None, instance=ticket)
@@ -258,13 +289,20 @@ def ticket_detail(request, ticket_id):
       return redirect(reverse('bugtracker:ticket_detail', args=[ticket.id]))
   #create comment form
     if comment_form.is_valid():
+      # Retrieve the user's profile (assuming you have access to the user)
+      user_profile = EmployeeProfile.objects.get(user=request.user)
+      # Get the image URL
       comment = comment_form.save(commit=False)
       comment.ticket = ticket
       comment.name = request.user.profile
       comment.save()
+      image_url = generate_initials_image(request.user.username, user_profile.get_initials())
+      for u in ticket.assign_members.all():
+        assigned_users.append(u.profile)
+        assigned_users.append(ticket.author)
+      send_notification(assigned_users, request.user.profile, ticket, comment, noti_new_comment)
       for comment in comments:
         comment_user = comment.name
-      print(comment_user)
       return redirect(reverse('bugtracker:ticket_detail', args=[ticket.id]))
   context = {
   'ticket':ticket, 
@@ -274,7 +312,8 @@ def ticket_detail(request, ticket_id):
   'comments': comments,
   'comment_user': comment_user,
   'comment_form':comment_form,
-  'edit_ticket_dev_form':edit_ticket_dev_form
+  'edit_ticket_dev_form':edit_ticket_dev_form,
+  'image_url': image_url,
   }
   return render(request, 'bugtrackerapp/ticket_detail.html', context)
 
@@ -295,6 +334,7 @@ def history_delete(request):
 
 @login_required(login_url="/")
 def ticket_update(request, ticket_id):
+  assigned_users = []
   ticket = get_object_or_404(Ticket, id=ticket_id)
   ticket_form = EditTicketForm(instance=ticket)
   ticket_form_dev = EditTicketForm(instance=ticket)
@@ -304,6 +344,10 @@ def ticket_update(request, ticket_id):
     if ticket_form.is_valid():
       ticket_form.save()
       #return redirect(reverse('bugtracker:project_detail', args=[ticket_project_id]))
+      for u in ticket.assign_members.all():
+        assigned_users.append(u.profile)
+        assigned_users.append(ticket.author)
+      send_notification(assigned_users, request.user.profile, ticket, None, noti_update_ticket)
       return redirect('bugtracker:tickets_view')
   # only admin can edit project field
   if not request.user.profile.role.role == "Admin":

@@ -18,7 +18,7 @@
       <div class="modal-footer">
         <a href="{% url 'bugtracker:ticket_delete' ticket.id %}" type="button" class="btn btn-danger">Delete</a>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-       
+
       </div>
     </div>
   </div>
@@ -28,6 +28,7 @@
 <hr>
 <div class="d-flex flex-row flex-wrap justify-content-between">
   <div class="info">
+    <p><label class="ticket-label">Ticket #:</label> {{ticket.id}}</p>
     <p><label class="ticket-label">Title:</label> {{ticket.title}}</p>
     <p><label class="ticket-label">Description:</label> {{ticket.ticket_description}}</p>
     <p><label class="ticket-label">Project:</label> {{ticket.project}}</p>
@@ -89,21 +90,34 @@
         {% for comment in comments %}
         <div class="card mb-3">
           <div class="card-body">
-            <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between card-body-inner">
               <div>
-                <small>{{comment.name}} - {{comment.date}}</small>
+                <div class="comment-info">
+                  {% if comment.name.avatar %}
+                  <div class="comment-profile-img">
+                    <img src="{{comment.name.avatar.url}}" alt="profile pic">
+
+                  </div>
+                  {% else %}
+                  <div class="comment-profile-img">
+                    <!-- <img src="{% static 'imgs/avatar.png' %}" alt="profile pic"> -->
+                    <div class="comment-profile-initials" id="changeColor">
+                      <div>{{comment.name.first_name.0|upper}}</div>
+                      <div>{{comment.name.last_name.0|upper}}</div>
+                    </div>
+                  </div>
+                  {% endif %}
+                  <small>
+                    {{comment.name}} - {{comment.date}}
+                  </small>
+                </div>
               </div>
-
-
               {% if comment.name == request.user.profile %}
               <div>
                 <a href="{% url  'bugtracker:comment_delete' comment.id %}"><i class="far fa-trash-alt"></i></a>
               </div>
               {% endif %}
-
-
             </div>
-
             <h6>{{comment.body}}</h6>
           </div>
         </div>
