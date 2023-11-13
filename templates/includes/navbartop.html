@@ -12,10 +12,7 @@
         <i class="fas fa-bell"></i>
         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
 
-
-          {{notification_count}}
-
-
+          {{notification.count}}
 
           <span class="visually-hidden">unread messages</span>
         </span>
@@ -75,7 +72,18 @@
     <div class="dropdown dropdown-account">
       <a class="btn btn-secondary dropdown-account-toggle" href="#" role="button" data-bs-toggle="dropdown"
         aria-expanded="false">
-        <img src="{{request.user.profile.avatar.url}}" alt="profile-pic" class="dropdown-account-profile-pic">
+
+        {% if request.user.profile.avatar %}
+          <img src="{{request.user.profile.avatar.url}}" alt="profile pic" class="dropdown-account-profile-pic">
+        {% else %}
+        <div class="comment-profile-img">
+          <div class="comment-profile-initials" id="changeColor">
+            <div>{{request.user.profile.first_name.0|upper}}</div>
+            <div>{{request.user.profile.last_name.0|upper}}</div>
+          </div>
+        </div>
+        {% endif %}
+
         <span class=" dropdown-toggle">{{request.user.profile.first_name.0|title}}.
           {{request.user.profile.last_name|capfirst}}</span>
       </a>

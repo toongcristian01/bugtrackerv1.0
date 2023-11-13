@@ -35,7 +35,6 @@ INSTALLED_APPS = [
     "bootstrap_datepicker_plus",
     'corsheaders',
     'simple_history',
-    'django_initials_avatar',
 ]
 
 MIDDLEWARE = [
